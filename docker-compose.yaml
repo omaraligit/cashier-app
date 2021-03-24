@@ -1,0 +1,57 @@
+version: '3'
+services:
+
+  cashier_app:
+    container_name: cashier-app
+    build: .
+    image: cashier_app:latest
+    restart: always
+    working_dir: /var/www/cashier/
+    ports:
+      - 8011:8000
+    volumes:
+      - ./:/var/www/cashier/
+    environment: 
+      DATABASE_URL: postgresql://postgres:postgres@cashier_postgres:5432/cashier?charset=utf8
+    depends_on: 
+      - cashier_postgres
+    networks:
+      - app-network
+
+  # --------------------------------------------------
+
+  cashier_postgres:
+    image: postgres:10-alpine
+    container_name: cashier-postgres
+    restart: always
+    environment: 
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+    networks:
+      - app-network
+
+  # --------------------------------------------------
+
+  cashier_pgadmin:
+    image: dpage/pgadmin4
+    container_name: cashier-pgadmin
+    restart: always
+    environment: 
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGADMIN_DEFAULT_EMAIL: user@domain.com
+      PGADMIN_DEFAULT_PASSWORD: SuperSecret
+    ports:
+      - 8012:80
+    networks:
+      - app-network
+
+
+# Docker Networks
+networks:
+  app-network:
+    driver: bridge
+# Volumes
+volumes:
+  dbdata:
+    driver: local
