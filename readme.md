@@ -14,11 +14,11 @@ Docker must be instaled to run the app other way you need a local server and pos
 
 1. after building the environment link up to the cashier-app container and run this cmd to create a database
    ```bash
-   symfony database create
+   php bin/console doctrine:database:create
    ```
 2. run migration to built databse tables
    ```bash
-   symfony cmd to build schema and create tables
+   php bin/console doctrine:migrations:migrate
    ```
 
 
