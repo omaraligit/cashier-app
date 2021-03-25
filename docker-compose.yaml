@@ -6,11 +6,11 @@ services:
     build: .
     image: cashier_app:latest
     restart: always
-    working_dir: /var/www/cashier/
+    working_dir: /var/www/symfony/
     ports:
       - 8011:8000
     volumes:
-      - ./:/var/www/cashier/
+      - ./:/var/www/symfony/
     environment: 
       DATABASE_URL: postgresql://postgres:postgres@cashier_postgres:5432/cashier?charset=utf8
     depends_on: 
