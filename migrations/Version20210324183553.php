@@ -22,7 +22,7 @@ final class Version20210324183553 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE receipt_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE receipt (id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, closed_at TIMESTAMP(0) WITHOUT TIME ZONE, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE receipt_product (receipt_id INT NOT NULL, product_id INT NOT NULL, PRIMARY KEY(receipt_id, product_id))');
+        $this->addSql('CREATE TABLE receipt_product (quantity INT NOT NULL default 1, receipt_id INT NOT NULL, product_id INT NOT NULL, PRIMARY KEY(receipt_id, product_id))');
         $this->addSql('CREATE INDEX IDX_C000A1532B5CA896 ON receipt_product (receipt_id)');
         $this->addSql('CREATE INDEX IDX_C000A1534584665A ON receipt_product (product_id)');
         $this->addSql('ALTER TABLE receipt_product ADD CONSTRAINT FK_C000A1532B5CA896 FOREIGN KEY (receipt_id) REFERENCES receipt (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');

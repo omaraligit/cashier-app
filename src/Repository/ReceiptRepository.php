@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Product;
 use App\Entity\Receipt;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,32 +20,53 @@ class ReceiptRepository extends ServiceEntityRepository
         parent::__construct($registry, Receipt::class);
     }
 
-    // /**
-    //  * @return Receipt[] Returns an array of Receipt objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Receipt
+    /**
+     * @param Product $product
+     * @param Receipt $receipt
+     * @return mixed
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function findIfProductIsInReceipt(Product $product, Receipt $receipt)
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT quantity
+            FROM receipt_product rp
+            WHERE rp.receipt_id = :receipt_id 
+            AND   rp.product_id = :product_id
+            ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'receipt_id' => $product->getId(),
+            'product_id' => $receipt->getId()
+        ]);
+        // returns an array of Product objects
+        return $stmt->fetchOne();
     }
-    */
+
+    /**
+     * @param Product $product
+     * @param Receipt $receipt
+     * @param int $quantity
+     * @return bool
+     * @throws \Doctrine\DBAL\Driver\Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function updateQuantityBetweenProductAndReceipt(Product $product, Receipt $receipt, int $quantity){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            update receipt_product rp set quantity = :quantity
+            WHERE rp.receipt_id = :receipt_id 
+            AND   rp.product_id = :product_id
+            ';
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute([
+            'quantity'   => $quantity,
+            'receipt_id' => $product->getId(),
+            'product_id' => $receipt->getId()
+        ]);
+    }
+
 }

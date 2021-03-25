@@ -26,7 +26,7 @@ class Receipt
     private $createdAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $closedAt;
 
@@ -82,9 +82,6 @@ class Receipt
     {
         if (!$this->products->contains($product)) {
             $this->products[] = $product;
-        }else{
-            dump($this->products);
-            die();
         }
 
         return $this;

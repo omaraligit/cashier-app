@@ -9,15 +9,18 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: email
+                property: apiToken
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             anonymous: true
+            stateless: true
             lazy: true
-            provider: app_user_provider
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
             logout:
                 path: app_logout
 
@@ -30,5 +33,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login }
+        - { path: ^/api, roles: ROLE_USER }
