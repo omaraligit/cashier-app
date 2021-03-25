@@ -60,3 +60,13 @@ a pg-admin instance was created to access the database
  - database user : (` postgres `)
  - database pass : (` postgres `)
  
+
+### Unit testing
+
+* run all tests of the application
+
+   ```bash
+   php bin/phpunit
+    ```
+wile running the test a warnning may show up its du to a new version issue not fixed yes read more here
+https://github.com/symfony/symfony/issues/39288

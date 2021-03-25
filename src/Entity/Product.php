@@ -145,4 +145,12 @@ class Product
 
         return $this;
     }
+
+    /**
+     * @return float|int|null
+     */
+    public function calculatePriceWithVat()
+    {
+        return $this->getCost() + (($this->getCost() * $this->getVat())/100);
+    }
 }
